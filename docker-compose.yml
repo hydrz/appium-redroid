@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  redroid:
+    image: redroid/redroid:11.0.0-latest
+    container_name: redroid
+    privileged: true
+    restart: always
+
+  appium:
+    image: appium/appium:1.21.0
+    container_name: appium
+    restart: always
+    depends_on:
+      - redroid
+      - selenium-hub
+    environment:
+      - REMOTE_ADB=true
+      - ANDROID_DEVICES=redroid:5555
+      - REMOTE_ADB_POLLING_SEC=60
+      - CONNECT_TO_GRID=true
+      - APPIUM_HOST=
+      - SELENIUM_HOST=selenium-hub
+      - SELENIUM_PORT=4444
+
+  selenium-hub:
+    image: selenium/hub:4.8.1-20230221
+    container_name: selenium-hub
+    restart: always
+    links:
+      - appium
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"

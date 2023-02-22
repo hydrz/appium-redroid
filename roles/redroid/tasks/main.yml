@@ -1,0 +1,33 @@
+---
+- name: Install modules extra
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - linux-modules-extra-{{ ansible_kernel }}
+  when: ansible_distribution in ['Debian', 'Ubuntu']
+
+- name: Install modules extra
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - kernel-devel-{{ ansible_kernel }}
+  when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
+
+- name: Add binder_linux and ashmem_linux to /etc/modules-load.d/
+  copy:
+    content: "{{ item }}"
+    dest: /etc/modules-load.d/{{ item }}.conf
+    mode: "u=rw,g=,o="
+  loop:
+    - binder_linux
+    - ashmem_linux
+
+- name: Load binder_linux and ashmem_linux
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - binder_linux
+    - ashmem_linux
