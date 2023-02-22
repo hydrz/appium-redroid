@@ -78,5 +78,5 @@
     state: link
 
 - name: Install longhorn
-  command: kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/master/deploy/longhorn.yaml
+  command: kubectl apply -f https://fastly.jsdelivr.net/gh/longhorn/longhorn@master/deploy/longhorn.yaml
   changed_when: true
