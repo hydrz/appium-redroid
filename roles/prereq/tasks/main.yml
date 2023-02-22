@@ -52,3 +52,10 @@
     path: /etc/sudoers
     validate: "visudo -cf %s"
   when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
+
+- name: Add k3s private registry configuration
+  copy:
+    content: "{{ k3s_private_registry }}"
+    dest: /etc/rancher/k3s/registries.yaml
+    mode: "u=rw,g=,o="
+  when: k3s_private_registry is defined
