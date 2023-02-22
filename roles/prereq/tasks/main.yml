@@ -54,8 +54,16 @@
   when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
 
 - name: Add k3s private registry configuration
-  copy:
-    content: "{{ k3s_private_registry }}"
-    dest: /etc/rancher/k3s/registries.yaml
-    mode: "u=rw,g=,o="
+  block:
+    - name: Create k3s private registry configuration directory
+      file:
+        path: /etc/rancher/k3s
+        state: directory
+        mode: "u=rwx,g=,o="
+
+    - name: Create k3s private registry configuration file
+      copy:
+        content: "{{ k3s_private_registry }}"
+        dest: /etc/rancher/k3s/registries.yaml
+        mode: "u=rw,g=,o="
   when: k3s_private_registry is defined
