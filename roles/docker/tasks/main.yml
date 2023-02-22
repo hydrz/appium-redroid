@@ -1,0 +1,28 @@
+---
+- name: Install docker
+  shell: |
+    curl -fsSL https://get.daocloud.io/docker | VERSION={{ docker_version }} bash -s docker --mirror {{ docker_mirror }}
+
+- name: Install docker-compose
+  shell: |
+    curl -SL https://get.daocloud.io/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-linux-{{ ansible_facts['architecture'] }} -o /usr/bin/docker-compose
+    chmod +x /usr/bin/docker-compose
+
+- name: Create docker daemon configuration directory
+  file:
+    path: /etc/docker
+    state: directory
+    mode: "u=rwx,g=,o="
+
+- name: Create docker daemon configuration file
+  copy:
+    content: "{{ docker_daemon_config }}"
+    dest: /etc/docker/daemon.json
+    mode: "u=rw,g=,o="
+  when: docker_daemon_config is defined
+
+- name: Enable and start docker
+  systemd:
+    name: docker
+    state: started
+    enabled: yes

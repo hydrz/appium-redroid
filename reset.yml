@@ -1,6 +1,4 @@
 ---
-- hosts: cluster
-  gather_facts: yes
-  become: yes
+- hosts: node
   roles:
     - role: reset

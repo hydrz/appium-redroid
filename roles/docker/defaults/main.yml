@@ -1,0 +1,4 @@
+---
+docker_version: 20.10
+docker_mirror: AzureChinaCloud
+docker_compose_version: v2.16.0
